@@ -496,44 +496,55 @@ const themeMap = {
   // ── Classic single-colour themes ──────────────────────
   // These keep the default dark background but tint surfaces subtly
   coral:   palette('#ff6b6b', '#ff8e53', '#ff7a5f', ['#ff6b6b', '#ff8e53'],
-    { bg: '#160e0e', surface: '#201212', surface2: '#2a1818', surface3: '#361e1e', orb1: '#ff6b6b', orb2: '#ff8e53' }),
+    { bg: '#160e0e', surface: '#201212', surface2: '#2a1818', surface3: '#361e1e', orb1: '#ff6b6b', orb2: '#ff8e53',
+      text: '#f8f0f0', textMuted: '#c09098', textDim: '#806068' }),
   violet:  palette('#7c3aed', '#a78bfa', '#8b5cf6', ['#7c3aed', '#a78bfa'],
-    { bg: '#0e0b18', surface: '#130f20', surface2: '#1b1529', surface3: '#241c35', orb1: '#7c3aed', orb2: '#a78bfa' }),
+    { bg: '#0e0b18', surface: '#130f20', surface2: '#1b1529', surface3: '#241c35', orb1: '#7c3aed', orb2: '#a78bfa',
+      text: '#f0f0fc', textMuted: '#9898d0', textDim: '#606098' }),
   cyan:    palette('#06b6d4', '#22d3ee', '#0ea5e9', ['#06b6d4', '#22d3ee'],
-    { bg: '#070f14', surface: '#0b1720', surface2: '#101f2a', surface3: '#162837', orb1: '#06b6d4', orb2: '#22d3ee' }),
+    { bg: '#070f14', surface: '#0b1720', surface2: '#101f2a', surface3: '#162837', orb1: '#06b6d4', orb2: '#22d3ee',
+      text: '#eef8fc', textMuted: '#7ab8cc', textDim: '#4a7888' }),
   emerald: palette('#10b981', '#34d399', '#059669', ['#10b981', '#34d399'],
-    { bg: '#071410', surface: '#0b1d16', surface2: '#10261d', surface3: '#153025', orb1: '#10b981', orb2: '#34d399' }),
+    { bg: '#071410', surface: '#0b1d16', surface2: '#10261d', surface3: '#153025', orb1: '#10b981', orb2: '#34d399',
+      text: '#eef8f4', textMuted: '#78b8a0', textDim: '#487860' }),
   rose:    palette('#f43f5e', '#fb7185', '#e11d48', ['#f43f5e', '#fb7185'],
-    { bg: '#15080c', surface: '#200c12', surface2: '#2a1018', surface3: '#35141f', orb1: '#f43f5e', orb2: '#fb7185' }),
+    { bg: '#15080c', surface: '#200c12', surface2: '#2a1018', surface3: '#35141f', orb1: '#f43f5e', orb2: '#fb7185',
+      text: '#faf0f2', textMuted: '#c890a0', textDim: '#886070' }),
   amber:   palette('#f59e0b', '#fbbf24', '#d97706', ['#f59e0b', '#fbbf24'],
-    { bg: '#141006', surface: '#1e170a', surface2: '#281f0e', surface3: '#322713', orb1: '#f59e0b', orb2: '#fbbf24' }),
+    { bg: '#141006', surface: '#1e170a', surface2: '#281f0e', surface3: '#322713', orb1: '#f59e0b', orb2: '#fbbf24',
+      text: '#faf5ec', textMuted: '#c0a870', textDim: '#806840' }),
 
   // ── Curated palettes ──────────────────────────────────
 
   // 1. Woodland Rave — deep forest floor, neon accents bleeding through the dark
   woodland: palette('#f95d9b', '#39a0ca', '#c74a82',
     ['#478559', '#161748', '#f95d9b', '#39a0ca'],
-    { bg: '#0b0e1a', surface: '#111629', surface2: '#181f35', surface3: '#1e2840', orb1: '#f95d9b', orb2: '#478559' }),
+    { bg: '#0b0e1a', surface: '#111629', surface2: '#181f35', surface3: '#1e2840', orb1: '#f95d9b', orb2: '#478559',
+      text: '#f0f0f8', textMuted: '#8898b8', textDim: '#586080' }),
 
   // 2. Summit & Bloom — cold alpine night, warm bloom breaking through
   summit: palette('#fea49f', '#fbaf08', '#fd7f7a',
     ['#101357', '#fea49f', '#fbaf08', '#00a0a0', '#007f4f'],
-    { bg: '#080b1c', surface: '#0e1228', surface2: '#141933', surface3: '#1a203e', orb1: '#fbaf08', orb2: '#00a0a0' }),
+    { bg: '#080b1c', surface: '#0e1228', surface2: '#141933', surface3: '#1a203e', orb1: '#fbaf08', orb2: '#00a0a0',
+      text: '#eef0f8', textMuted: '#88a0c0', textDim: '#506080' }),
 
   // 3. Acid Garden — electric night, synthetic and alive
   acid: palette('#0e0fed', '#8bf0ba', '#5272f4',
     ['#8bf0ba', '#0e0fed', '#94f0f1', '#f2b1d8', '#ffdc6a'],
-    { bg: '#05050f', surface: '#09091a', surface2: '#0e0e24', surface3: '#13132d', orb1: '#8bf0ba', orb2: '#0e0fed' }),
+    { bg: '#05050f', surface: '#09091a', surface2: '#0e0e24', surface3: '#13132d', orb1: '#8bf0ba', orb2: '#0e0fed',
+      text: '#f0fff8', textMuted: '#78d0a8', textDim: '#406850' }),
 
   // 4. Midnight Concrete — urban brutalism, gold light on wet stone
   concrete: palette('#feda6a', '#d4d4dc', '#e8c85a',
     ['#feda6a', '#d4d4dc', '#393f4d', '#1d1e22'],
-    { bg: '#111215', surface: '#18191e', surface2: '#1e2028', surface3: '#252730', orb1: '#feda6a', orb2: '#d4d4dc' }),
+    { bg: '#111215', surface: '#18191e', surface2: '#1e2028', surface3: '#252730', orb1: '#feda6a', orb2: '#d4d4dc',
+      text: '#f4f4f8', textMuted: '#a8a8c0', textDim: '#686878' }),
 
   // 5. Darkroom — dim red safelight, chemical green, shadows
   darkroom: palette('#00c07f', '#cd5554', '#00a06a',
     ['#cd5554', '#91684a', '#00c07f', '#313d4b'],
-    { bg: '#090d0b', surface: '#0f1510', surface2: '#141c15', surface3: '#1a231a', orb1: '#cd5554', orb2: '#00c07f' }),
+    { bg: '#090d0b', surface: '#0f1510', surface2: '#141c15', surface3: '#1a231a', orb1: '#cd5554', orb2: '#00c07f',
+      text: '#eef4f0', textMuted: '#88a898', textDim: '#506858' }),
 
   // 6. Manuscript — ancient parchment, ink, candlelight warmth
   //    Parchment · Bone · Linen · Almond Cream · Almond Silk
@@ -543,7 +554,8 @@ const themeMap = {
     '#b09880',   // mid
     ['#edede9', '#d6ccc2', '#f5ebe0', '#e3d5ca', '#d5bdaf'],
     // Dark mode: warm near-black with deep parchment undertones
-    { bg: '#16120e', surface: '#1e1810', surface2: '#271f15', surface3: '#32281a', orb1: '#d5bdaf', orb2: '#c9b8a8' },
+    { bg: '#16120e', surface: '#1e1810', surface2: '#271f15', surface3: '#32281a', orb1: '#d5bdaf', orb2: '#c9b8a8',
+      text: '#f0e8dc', textMuted: '#b09070', textDim: '#786050' },
     // Light mode: parchment world — Parchment bg, Bone/Linen surfaces
     { bg: '#edede9', surface: '#f5ebe0', surface2: '#e3d5ca', surface3: '#d6ccc2',
       text: '#2c1f14', textMuted: '#6b5040', textDim: '#9c7e68',
@@ -620,10 +632,14 @@ function applyTheme(name) {
     root.style.setProperty('--clock-rim',  e.surface);
     root.style.setProperty('--orb1-color', e.orb1);
     root.style.setProperty('--orb2-color', e.orb2);
-    // Reset text/border to dark defaults (in case a previous palette overrode them)
-    root.style.removeProperty('--text');
-    root.style.removeProperty('--text-muted');
-    root.style.removeProperty('--text-dim');
+    // Per-palette text colours — push if defined, else use :root CSS defaults
+    if (e.text)      root.style.setProperty('--text',       e.text);
+    else             root.style.removeProperty('--text');
+    if (e.textMuted) root.style.setProperty('--text-muted', e.textMuted);
+    else             root.style.removeProperty('--text-muted');
+    if (e.textDim)   root.style.setProperty('--text-dim',   e.textDim);
+    else             root.style.removeProperty('--text-dim');
+    // Border stays at CSS defaults in dark mode
     root.style.removeProperty('--border');
     root.style.removeProperty('--border-bright');
   } else {

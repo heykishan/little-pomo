@@ -23,9 +23,9 @@
   --surface-3: #361e1e;
   --border: rgba(255, 255, 255, 0.10);
   --border-bright: rgba(255, 255, 255, 0.20);
-  --text: #f4f4fc;
-  --text-muted: #9898c0;
-  --text-dim: #606088;
+  --text: #f4f4f4;
+  --text-muted: #a0a0b0;
+  --text-dim: #686878;
 
   /* Orb colours — overridden per-theme by JS */
   --orb1-color: #ff6b6b;

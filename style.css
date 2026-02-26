@@ -8,6 +8,12 @@
   padding: 0;
 }
 
+/* Buttons and inputs don't inherit font by default — fix that globally */
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+}
+
 :root {
   /* Accent — coral (default, overridden by JS) */
   --accent-start: #ff6b6b;

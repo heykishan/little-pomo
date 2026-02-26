@@ -271,6 +271,13 @@ body {
   transform: rotate(30deg);
 }
 
+/* PNG icon base styles */
+.btn-icon {
+  display: block;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
 /* Sun/moon icon visibility based on current appearance */
 #themeToggleBtn .icon-sun  { display: none; }
 #themeToggleBtn .icon-moon { display: block; }

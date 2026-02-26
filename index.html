@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Little Pomo</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Background ambient orbs -->
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-orb orb-3"></div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">
+      <img src="logo.svg"      alt="Little Pomo" class="logo-img logo-img--light" width="32" height="32" />
+      <img src="logo-dark.svg" alt="Little Pomo" class="logo-img logo-img--dark"  width="32" height="32" />
+      <span class="logo-text">Little Pomo</span>
+    </div>
+    <div class="header-actions">
+    <button class="settings-btn" id="themeToggleBtn" aria-label="Toggle light/dark mode">
+      <!-- Moon (shown in dark mode) -->
+      <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+      <!-- Sun (shown in light mode) -->
+      <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="5"/>
+        <line x1="12" y1="1" x2="12" y2="3"/>
+        <line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1" y1="12" x2="3" y2="12"/>
+        <line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+    </button>
+    <button class="settings-btn" id="infoBtn" aria-label="Keyboard shortcuts & info">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="16" x2="12" y2="12"/>
+        <line x1="12" y1="8" x2="12.01" y2="8"/>
+      </svg>
+    </button>
+    <button class="settings-btn" id="settingsBtn" aria-label="Settings">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+      </svg>
+    </button>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- Mode selector -->
+    <div class="mode-tabs">
+      <button class="mode-tab active" data-mode="pomo">Pomodoro</button>
+      <button class="mode-tab" data-mode="short">Short Break</button>
+      <button class="mode-tab" data-mode="long">Long Break</button>
+    </div>
+
+    <!-- Clock container -->
+    <div class="clock-container">
+
+      <!-- Outer glow ring -->
+      <div class="clock-glow-ring" id="glowRing"></div>
+
+      <!-- Progress arc SVG -->
+      <svg class="progress-ring" viewBox="0 0 320 320" id="progressRing">
+        <defs>
+          <linearGradient id="arcGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="var(--accent-start)" />
+            <stop offset="100%" stop-color="var(--accent-end)" />
+          </linearGradient>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+        <!-- Track -->
+        <circle class="progress-track" cx="160" cy="160" r="140" />
+        <!-- Progress -->
+        <circle class="progress-arc" cx="160" cy="160" r="140" id="progressArc" filter="url(#glow)" />
+      </svg>
+
+      <!-- Analog clock face -->
+      <div class="clock-face" id="clockFace">
+
+        <!-- Hour markers -->
+        <div class="clock-markers" id="clockMarkers"></div>
+
+        <!-- Minute markers -->
+        <div class="clock-minute-markers" id="minuteMarkers"></div>
+
+        <!-- Hands -->
+        <div class="hand minute-hand" id="minuteHand">
+          <div class="hand-body"></div>
+          <div class="hand-tail"></div>
+        </div>
+        <div class="hand second-hand" id="secondHand">
+          <div class="hand-body"></div>
+          <div class="hand-tail"></div>
+        </div>
+
+        <!-- Center jewel -->
+        <div class="center-jewel">
+          <div class="center-jewel-inner"></div>
+        </div>
+
+        <!-- Digital display -->
+        <div class="digital-display" id="digitalDisplay">
+          <span id="digitalTime">25:00</span>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Session count -->
+    <div class="session-dots" id="sessionDots">
+      <span class="session-label">Sessions</span>
+      <div class="dots" id="dotsContainer">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <button class="ctrl-btn secondary" id="resetBtn" aria-label="Reset">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="1 4 1 10 7 10"/>
+          <path d="M3.51 15a9 9 0 1 0 .49-3.14"/>
+        </svg>
+      </button>
+
+      <button class="ctrl-btn primary" id="startBtn">
+        <svg class="icon-play" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+          <polygon points="5,3 19,12 5,21"/>
+        </svg>
+        <svg class="icon-pause hidden" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+          <rect x="6" y="4" width="4" height="16"/>
+          <rect x="14" y="4" width="4" height="16"/>
+        </svg>
+      </button>
+
+      <button class="ctrl-btn secondary" id="skipBtn" aria-label="Skip">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="5,4 15,12 5,20"/>
+          <line x1="19" y1="5" x2="19" y2="19"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Task section -->
+    <div class="task-section">
+      <div class="task-header">
+        <h3 class="task-title">Current Task</h3>
+        <span class="task-count" id="taskCount">0 tasks</span>
+      </div>
+
+      <!-- Active task display -->
+      <div class="active-task" id="activeTaskDisplay">
+        <span class="active-task-text" id="activeTaskText">No task selected</span>
+      </div>
+
+      <!-- Add task -->
+      <div class="add-task-row">
+        <input
+          type="text"
+          class="task-input"
+          id="taskInput"
+          placeholder="What are you working on?"
+          maxlength="80"
+        />
+        <button class="add-task-btn" id="addTaskBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Task list -->
+      <ul class="task-list" id="taskList"></ul>
+    </div>
+
+  </main>
+
+  <!-- ========== INFO MODAL ========== -->
+  <div class="modal-overlay" id="infoModalOverlay">
+    <div class="modal" id="infoModal">
+
+      <div class="modal-header">
+        <h2 class="modal-title">Info & Shortcuts</h2>
+        <button class="modal-close" id="infoModalClose">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+
+        <div class="settings-section">
+          <h3 class="settings-section-title"><span class="settings-section-icon">⌨️</span> Keyboard Shortcuts</h3>
+          <div class="shortcut-list">
+            <div class="shortcut-row">
+              <div class="shortcut-keys"><kbd>Space</kbd></div>
+              <span class="shortcut-desc">Play / Pause timer</span>
+            </div>
+            <div class="shortcut-row">
+              <div class="shortcut-keys"><kbd>R</kbd></div>
+              <span class="shortcut-desc">Reset current timer</span>
+            </div>
+            <div class="shortcut-row">
+              <div class="shortcut-keys"><kbd>S</kbd></div>
+              <span class="shortcut-desc">Skip to next session</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3 class="settings-section-title"><span class="settings-section-icon">🍅</span> How Pomodoro Works</h3>
+          <div class="info-steps">
+            <div class="info-step">
+              <span class="info-step-num">1</span>
+              <span class="info-step-text">Pick a task and start a 25-minute focus session</span>
+            </div>
+            <div class="info-step">
+              <span class="info-step-num">2</span>
+              <span class="info-step-text">Work until the timer rings — no distractions</span>
+            </div>
+            <div class="info-step">
+              <span class="info-step-num">3</span>
+              <span class="info-step-text">Take a short 5-minute break</span>
+            </div>
+            <div class="info-step">
+              <span class="info-step-num">4</span>
+              <span class="info-step-text">Every 4 sessions, take a longer 15-minute break</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3 class="settings-section-title"><span class="settings-section-icon">💡</span> Tips</h3>
+          <ul class="info-tips">
+            <li>Click a task in the list to set it as the active focus</li>
+            <li>Check off the checkbox to mark a task as done</li>
+            <li>🍅 counts on tasks show completed pomodoros</li>
+            <li>Settings persist across browser refreshes</li>
+          </ul>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========== SETTINGS MODAL ========== -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="settingsModal">
+
+      <div class="modal-header">
+        <h2 class="modal-title">Settings</h2>
+        <button class="modal-close" id="modalClose">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+
+        <!-- Timer section -->
+        <div class="settings-section">
+          <h3 class="settings-section-title">
+            <span class="settings-section-icon">⏱</span>
+            Timer Durations
+          </h3>
+
+          <div class="settings-row">
+            <label class="settings-label">
+              <span>Pomodoro</span>
+              <span class="settings-unit">minutes</span>
+            </label>
+            <div class="number-input">
+              <button class="num-btn" data-target="pomoDuration" data-delta="-1">−</button>
+              <input type="number" id="pomoDuration" value="25" min="1" max="90" />
+              <button class="num-btn" data-target="pomoDuration" data-delta="1">+</button>
+            </div>
+          </div>
+
+          <div class="settings-row">
+            <label class="settings-label">
+              <span>Short Break</span>
+              <span class="settings-unit">minutes</span>
+            </label>
+            <div class="number-input">
+              <button class="num-btn" data-target="shortBreak" data-delta="-1">−</button>
+              <input type="number" id="shortBreak" value="5" min="1" max="30" />
+              <button class="num-btn" data-target="shortBreak" data-delta="1">+</button>
+            </div>
+          </div>
+
+          <div class="settings-row">
+            <label class="settings-label">
+              <span>Long Break</span>
+              <span class="settings-unit">minutes</span>
+            </label>
+            <div class="number-input">
+              <button class="num-btn" data-target="longBreak" data-delta="-1">−</button>
+              <input type="number" id="longBreak" value="15" min="1" max="60" />
+              <button class="num-btn" data-target="longBreak" data-delta="1">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Auto settings -->
+        <div class="settings-section">
+          <h3 class="settings-section-title">
+            <span class="settings-section-icon">⚡</span>
+            Automation
+          </h3>
+
+          <div class="settings-row">
+            <label class="settings-label">
+              <span>Long break after</span>
+              <span class="settings-unit">sessions</span>
+            </label>
+            <div class="number-input">
+              <button class="num-btn" data-target="longBreakInterval" data-delta="-1">−</button>
+              <input type="number" id="longBreakInterval" value="4" min="2" max="10" />
+              <button class="num-btn" data-target="longBreakInterval" data-delta="1">+</button>
+            </div>
+          </div>
+
+          <div class="settings-row">
+            <label class="settings-label">
+              <span>Auto-start breaks</span>
+            </label>
+            <label class="toggle">
+              <input type="checkbox" id="autoStartBreaks" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="settings-row">
+            <label class="settings-label">
+              <span>Auto-start pomodoros</span>
+            </label>
+            <label class="toggle">
+              <input type="checkbox" id="autoStartPomos" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Sound section -->
+        <div class="settings-section">
+          <h3 class="settings-section-title">
+            <span class="settings-section-icon">🔔</span>
+            Notifications
+          </h3>
+
+          <div class="settings-row">
+            <label class="settings-label">
+              <span>Sound alerts</span>
+            </label>
+            <label class="toggle">
+              <input type="checkbox" id="soundEnabled" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="settings-row">
+            <label class="settings-label">
+              <span>Volume</span>
+            </label>
+            <div class="slider-wrap">
+              <input type="range" id="volumeSlider" min="0" max="100" value="70" class="range-slider" />
+              <span class="range-value" id="volumeValue">70%</span>
+            </div>
+          </div>
+
+          <div class="settings-row">
+            <label class="settings-label">
+              <span>Browser notifications</span>
+            </label>
+            <label class="toggle">
+              <input type="checkbox" id="notifEnabled" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Theme section -->
+        <div class="settings-section">
+          <h3 class="settings-section-title">
+            <span class="settings-section-icon">🎨</span>
+            Theme
+          </h3>
+
+          <div class="settings-row">
+            <label class="settings-label"><span>Appearance</span></label>
+            <div class="appearance-toggle" id="appearanceToggle">
+              <button class="appear-btn active" data-appear="dark">Dark</button>
+              <button class="appear-btn" data-appear="light">Light</button>
+            </div>
+          </div>
+
+          <div class="settings-row">
+            <label class="settings-label"><span>Accent color</span></label>
+            <div class="color-swatches" id="colorSwatches">
+              <button class="swatch active" data-color="coral" style="--sw: #ff6b6b, #ff8e53"></button>
+              <button class="swatch" data-color="violet" style="--sw: #7c3aed, #a78bfa"></button>
+              <button class="swatch" data-color="cyan" style="--sw: #06b6d4, #22d3ee"></button>
+              <button class="swatch" data-color="emerald" style="--sw: #10b981, #34d399"></button>
+              <button class="swatch" data-color="rose" style="--sw: #f43f5e, #fb7185"></button>
+              <button class="swatch" data-color="amber" style="--sw: #f59e0b, #fbbf24"></button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-save" id="saveSettings">Save Changes</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Completion overlay -->
+  <div class="completion-overlay" id="completionOverlay">
+    <div class="completion-card">
+      <div class="completion-emoji" id="completionEmoji">🎉</div>
+      <h2 class="completion-title" id="completionTitle">Session Complete!</h2>
+      <p class="completion-sub" id="completionSub">Time for a break</p>
+      <button class="completion-btn" id="completionBtn">Continue</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

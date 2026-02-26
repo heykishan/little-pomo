@@ -43,6 +43,9 @@
   --radius-lg: 20px;
   --radius-xl: 28px;
 
+  /* Font — overridden by JS */
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
   /* Transitions */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -143,7 +146,7 @@ body,
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: var(--font-body);
   min-height: 100vh;
   overflow-x: hidden;
   position: relative;
@@ -1309,6 +1312,71 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 1.2;
+}
+
+/* ── Font picker ──────────────────────────────────────── */
+
+.font-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.font-card {
+  flex: 1;
+  min-width: 76px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 12px 8px 10px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--border);
+  background: var(--surface-3);
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  position: relative;
+}
+
+.font-card:hover {
+  border-color: var(--border-bright);
+  background: var(--surface-2);
+}
+
+.font-card.active {
+  border-color: var(--accent-start);
+  box-shadow: 0 0 0 2px var(--accent-soft), 0 4px 12px var(--accent-glow);
+}
+
+.font-card.active::after {
+  content: '✓';
+  position: absolute;
+  top: 5px;
+  right: 7px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--accent-start);
+  line-height: 1;
+}
+
+.font-sample {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1;
+  /* fontFamily set inline per-card by JS */
+}
+
+.font-name {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
   line-height: 1.2;
 }
 

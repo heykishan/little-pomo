@@ -34,6 +34,7 @@ const state = {
     notifEnabled: false,
     theme: 'coral',
     appearance: 'dark',
+    font: 'inter',
   },
 };
 
@@ -590,6 +591,55 @@ const paletteGroups = [
   },
 ];
 
+// ── Font picker ─────────────────────────────────────────
+
+const fontMap = [
+  { key: 'inter',     name: 'Inter',          stack: "'Inter', sans-serif",          label: 'Sans'   },
+  { key: 'nunito',    name: 'Nunito',          stack: "'Nunito', sans-serif",         label: 'Round'  },
+  { key: 'lora',      name: 'Lora',            stack: "'Lora', serif",                label: 'Serif'  },
+  { key: 'playfair',  name: 'Playfair',        stack: "'Playfair Display', serif",    label: 'Elegant'},
+  { key: 'jetbrains', name: 'JetBrains Mono',  stack: "'JetBrains Mono', monospace",  label: 'Mono 🤓'},
+];
+
+function applyFont(key) {
+  const f = fontMap.find(f => f.key === key) || fontMap[0];
+  document.documentElement.style.setProperty('--font-body', f.stack);
+}
+
+function buildFontGrid() {
+  const grid = document.getElementById('fontGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  fontMap.forEach(f => {
+    const card = document.createElement('button');
+    card.className = 'font-card' + (state.settings.font === f.key ? ' active' : '');
+    card.dataset.font = f.key;
+    card.type = 'button';
+
+    const sample = document.createElement('span');
+    sample.className = 'font-sample';
+    sample.textContent = 'Aa';
+    sample.style.fontFamily = f.stack; // render sample in its own font
+
+    const name = document.createElement('span');
+    name.className = 'font-name';
+    name.textContent = f.name;
+
+    card.appendChild(sample);
+    card.appendChild(name);
+
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.font-card').forEach(c => c.classList.remove('active'));
+      card.classList.add('active');
+      state.settings.font = f.key;
+      applyFont(f.key);
+    });
+
+    grid.appendChild(card);
+  });
+}
+
 // ── Persistence ─────────────────────────────────────────
 
 const STORAGE_KEY = 'little-pomo-settings';
@@ -708,8 +758,9 @@ function populateSettingsUI() {
   $('volumeValue').textContent = s.volume + '%';
   $('notifEnabled').checked    = s.notifEnabled;
 
-  // Rebuild palette grid so active state is fresh
+  // Rebuild palette + font grids so active state is fresh
   buildPaletteGrid();
+  buildFontGrid();
 
   document.querySelectorAll('.appear-btn').forEach(b => {
     b.classList.toggle('active', b.dataset.appear === s.appearance);
@@ -917,6 +968,7 @@ function init() {
   buildMarkers();
   applyAppearance(state.settings.appearance);
   applyTheme(state.settings.theme);
+  applyFont(state.settings.font);
   state.totalSeconds = getModeSeconds();
   state.remainingSeconds = state.totalSeconds;
   renderClock(0, state.totalSeconds, state.remainingSeconds);

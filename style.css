@@ -1202,31 +1202,103 @@ body {
   text-align: right;
 }
 
-/* Color swatches */
-.color-swatches {
+/* ── Palette grid ─────────────────────────────────────── */
+
+.palette-section {
   display: flex;
-  gap: 8px;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.swatch {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: 2px solid transparent;
+.palette-section-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.palette-group-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 2px;
+  margin-top: 6px;
+}
+
+.palette-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.palette-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.palette-card {
+  flex: 1;
+  min-width: 90px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 9px 10px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--border);
+  background: var(--surface-3);
   cursor: pointer;
-  background: linear-gradient(135deg, var(--sw));
-  transition: all 0.2s var(--ease-spring);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
   position: relative;
 }
 
-.swatch:hover {
-  transform: scale(1.15);
+.palette-card:hover {
+  border-color: var(--border-bright);
+  background: var(--surface-2);
 }
 
-.swatch.active {
-  border-color: #fff;
-  box-shadow: 0 0 0 3px rgba(255,255,255,0.2);
-  transform: scale(1.1);
+.palette-card.active {
+  border-color: var(--accent-start);
+  box-shadow: 0 0 0 2px var(--accent-soft), 0 4px 12px var(--accent-glow);
+}
+
+/* Tick mark on active card */
+.palette-card.active::after {
+  content: '✓';
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--accent-start);
+  line-height: 1;
+}
+
+.palette-dots {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.palette-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);
+}
+
+.palette-name {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
 }
 
 /* Save button */

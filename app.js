@@ -470,14 +470,81 @@ function escHtml(str) {
 
 // ── Settings ────────────────────────────────────────────
 
+// hex → {r,g,b}
+function hexRgb(hex) {
+  const n = parseInt(hex.slice(1), 16);
+  return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+}
+function makeGlow(hex, a)  { const {r,g,b} = hexRgb(hex); return `rgba(${r},${g},${b},${a})`; }
+
+function palette(start, end, mid, swatches) {
+  return { start, end, mid,
+    glow: makeGlow(start, 0.35),
+    soft: makeGlow(start, 0.12),
+    swatches,           // array of hex strings shown in the card
+  };
+}
+
 const themeMap = {
-  coral:   { start: '#ff6b6b', end: '#ff8e53', mid: '#ff7a5f', glow: 'rgba(255,107,107,0.35)', soft: 'rgba(255,107,107,0.12)' },
-  violet:  { start: '#7c3aed', end: '#a78bfa', mid: '#8b5cf6', glow: 'rgba(124,58,237,0.35)',   soft: 'rgba(124,58,237,0.12)' },
-  cyan:    { start: '#06b6d4', end: '#22d3ee', mid: '#0ea5e9', glow: 'rgba(6,182,212,0.35)',     soft: 'rgba(6,182,212,0.12)' },
-  emerald: { start: '#10b981', end: '#34d399', mid: '#059669', glow: 'rgba(16,185,129,0.35)',    soft: 'rgba(16,185,129,0.12)' },
-  rose:    { start: '#f43f5e', end: '#fb7185', mid: '#e11d48', glow: 'rgba(244,63,94,0.35)',     soft: 'rgba(244,63,94,0.12)' },
-  amber:   { start: '#f59e0b', end: '#fbbf24', mid: '#d97706', glow: 'rgba(245,158,11,0.35)',    soft: 'rgba(245,158,11,0.12)' },
+  // ── Classic single-colour themes ──────────────────────
+  coral:   palette('#ff6b6b', '#ff8e53', '#ff7a5f', ['#ff6b6b', '#ff8e53']),
+  violet:  palette('#7c3aed', '#a78bfa', '#8b5cf6', ['#7c3aed', '#a78bfa']),
+  cyan:    palette('#06b6d4', '#22d3ee', '#0ea5e9', ['#06b6d4', '#22d3ee']),
+  emerald: palette('#10b981', '#34d399', '#059669', ['#10b981', '#34d399']),
+  rose:    palette('#f43f5e', '#fb7185', '#e11d48', ['#f43f5e', '#fb7185']),
+  amber:   palette('#f59e0b', '#fbbf24', '#d97706', ['#f59e0b', '#fbbf24']),
+
+  // ── Curated palettes ──────────────────────────────────
+  // 1. Woodland Rave
+  //    Green Treeline · Purple Baseline · Pink Highlight · Bluewater Lowlight
+  woodland: palette('#f95d9b', '#39a0ca', '#c74a82',
+    ['#478559', '#161748', '#f95d9b', '#39a0ca']),
+
+  // 2. Summit & Bloom
+  //    Mountain Shadow Blue · Old Makeup Pink · Goldenrod Yellow · Bluebell Teal
+  summit: palette('#fea49f', '#fbaf08', '#fd7f7a',
+    ['#101357', '#fea49f', '#fbaf08', '#00a0a0', '#007f4f']),
+
+  // 3. Acid Garden
+  //    Green · Ironic Blues · Blue Underling · Pinky Ring · Egg Yellows
+  acid: palette('#0e0fed', '#8bf0ba', '#5272f4',
+    ['#8bf0ba', '#0e0fed', '#94f0f1', '#f2b1d8', '#ffdc6a']),
+
+  // 4. Midnight Concrete
+  //    Are ya yellow?! · Silver Fox · Deep Matte Grey · Dark Slate
+  concrete: palette('#feda6a', '#d4d4dc', '#e8c85a',
+    ['#feda6a', '#d4d4dc', '#393f4d', '#1d1e22']),
+
+  // 5. Darkroom
+  //    Red Overlaid · Photographed Brown · Algae Green · Heritage Blue
+  darkroom: palette('#00c07f', '#cd5554', '#00a06a',
+    ['#cd5554', '#91684a', '#00c07f', '#313d4b']),
 };
+
+// Palette metadata (name + swatch order for the UI)
+const paletteGroups = [
+  {
+    label: 'Classic',
+    palettes: [
+      { key: 'coral',   name: 'Coral',   swatches: ['#ff6b6b', '#ff8e53'] },
+      { key: 'violet',  name: 'Violet',  swatches: ['#7c3aed', '#a78bfa'] },
+      { key: 'cyan',    name: 'Cyan',    swatches: ['#06b6d4', '#22d3ee'] },
+      { key: 'emerald', name: 'Emerald', swatches: ['#10b981', '#34d399'] },
+      { key: 'rose',    name: 'Rose',    swatches: ['#f43f5e', '#fb7185'] },
+      { key: 'amber',   name: 'Amber',   swatches: ['#f59e0b', '#fbbf24'] },
+    ],
+  },
+  {
+    label: 'Curated',
+    palettes: [
+      { key: 'woodland', name: 'Woodland Rave',      swatches: ['#478559', '#161748', '#f95d9b', '#39a0ca'] },
+      { key: 'summit',   name: 'Summit & Bloom',     swatches: ['#101357', '#fea49f', '#fbaf08', '#00a0a0', '#007f4f'] },
+      { key: 'acid',     name: 'Acid Garden',        swatches: ['#8bf0ba', '#0e0fed', '#94f0f1', '#f2b1d8', '#ffdc6a'] },
+      { key: 'concrete', name: 'Midnight Concrete',  swatches: ['#feda6a', '#d4d4dc', '#393f4d', '#1d1e22'] },
+      { key: 'darkroom', name: 'Darkroom',           swatches: ['#cd5554', '#91684a', '#00c07f', '#313d4b'] },
+    ],
+  },
+];
 
 // ── Persistence ─────────────────────────────────────────
 
@@ -538,9 +605,8 @@ function populateSettingsUI() {
   $('volumeValue').textContent = s.volume + '%';
   $('notifEnabled').checked    = s.notifEnabled;
 
-  document.querySelectorAll('.swatch').forEach(sw => {
-    sw.classList.toggle('active', sw.dataset.color === s.theme);
-  });
+  // Rebuild palette grid so active state is fresh
+  buildPaletteGrid();
 
   document.querySelectorAll('.appear-btn').forEach(b => {
     b.classList.toggle('active', b.dataset.appear === s.appearance);
@@ -628,14 +694,60 @@ $('volumeSlider').addEventListener('input', e => {
   $('volumeValue').textContent = e.target.value + '%';
 });
 
-// Color swatches
-document.querySelectorAll('.swatch').forEach(sw => {
-  sw.addEventListener('click', () => {
-    document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
-    sw.classList.add('active');
-    state.settings.theme = sw.dataset.color;
+// ── Palette grid (built once, wired on build) ────────────
+
+function buildPaletteGrid() {
+  const grid = document.getElementById('paletteGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  paletteGroups.forEach(group => {
+    // Group label
+    const label = document.createElement('p');
+    label.className = 'palette-group-label';
+    label.textContent = group.label;
+    grid.appendChild(label);
+
+    // Row of cards
+    const row = document.createElement('div');
+    row.className = 'palette-row';
+
+    group.palettes.forEach(p => {
+      const card = document.createElement('button');
+      card.className = 'palette-card' + (state.settings.theme === p.key ? ' active' : '');
+      card.dataset.palette = p.key;
+      card.type = 'button';
+
+      // Colour dots
+      const dots = document.createElement('div');
+      dots.className = 'palette-dots';
+      p.swatches.forEach(hex => {
+        const dot = document.createElement('span');
+        dot.className = 'palette-dot';
+        dot.style.background = hex;
+        dots.appendChild(dot);
+      });
+
+      const name = document.createElement('span');
+      name.className = 'palette-name';
+      name.textContent = p.name;
+
+      card.appendChild(dots);
+      card.appendChild(name);
+
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.palette-card').forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+        state.settings.theme = p.key;
+        applyTheme(p.key);
+      });
+
+      row.appendChild(card);
+    });
+
+    grid.appendChild(row);
   });
-});
+}
 
 // Appearance buttons (in settings modal)
 document.querySelectorAll('.appear-btn').forEach(btn => {

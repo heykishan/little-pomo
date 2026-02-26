@@ -477,17 +477,18 @@ function hexRgb(hex) {
 }
 function makeGlow(hex, a)  { const {r,g,b} = hexRgb(hex); return `rgba(${r},${g},${b},${a})`; }
 
-// palette(start, end, mid, swatches, env)
-// env = { bg, surface, surface2, surface3, orb1, orb2 }
-//   — dark-mode background environment derived from the palette's character
-//   — light-mode always uses its own neutral tokens (unaffected)
-function palette(start, end, mid, swatches, env) {
+// palette(start, end, mid, swatches, env, lightEnv)
+// env      — dark-mode background environment
+// lightEnv — optional light-mode override (only for palettes that own their light world)
+//            when absent, light mode uses the neutral CSS defaults
+function palette(start, end, mid, swatches, env, lightEnv) {
   return {
     start, end, mid,
     glow: makeGlow(start, 0.35),
     soft: makeGlow(start, 0.12),
     swatches,
-    env: env || null,   // null = use CSS default dark tokens
+    env,
+    lightEnv: lightEnv || null,
   };
 }
 
@@ -533,6 +534,22 @@ const themeMap = {
   darkroom: palette('#00c07f', '#cd5554', '#00a06a',
     ['#cd5554', '#91684a', '#00c07f', '#313d4b'],
     { bg: '#090d0b', surface: '#0f1510', surface2: '#141c15', surface3: '#1a231a', orb1: '#cd5554', orb2: '#00c07f' }),
+
+  // 6. Manuscript — ancient parchment, ink, candlelight warmth
+  //    Parchment · Bone · Linen · Almond Cream · Almond Silk
+  manuscript: palette(
+    '#a0876e',   // start: warm ink-brown (derived from Almond Silk, deepened)
+    '#c9b8a8',   // end: Almond Cream/Silk midpoint — soft warm taupe
+    '#b09880',   // mid
+    ['#edede9', '#d6ccc2', '#f5ebe0', '#e3d5ca', '#d5bdaf'],
+    // Dark mode: warm near-black with deep parchment undertones
+    { bg: '#16120e', surface: '#1e1810', surface2: '#271f15', surface3: '#32281a', orb1: '#d5bdaf', orb2: '#c9b8a8' },
+    // Light mode: parchment world — Parchment bg, Bone/Linen surfaces
+    { bg: '#edede9', surface: '#f5ebe0', surface2: '#e3d5ca', surface3: '#d6ccc2',
+      text: '#2c1f14', textMuted: '#6b5040', textDim: '#9c7e68',
+      border: 'rgba(100,70,45,0.12)', borderBright: 'rgba(100,70,45,0.22)',
+      clockFace: '#faf6f0', orb1: '#d5bdaf', orb2: '#e3d5ca' }
+  ),
 };
 
 // Palette metadata (name + swatch order for the UI)
@@ -555,7 +572,8 @@ const paletteGroups = [
       { key: 'summit',   name: 'Summit & Bloom',     swatches: ['#101357', '#fea49f', '#fbaf08', '#00a0a0', '#007f4f'] },
       { key: 'acid',     name: 'Acid Garden',        swatches: ['#8bf0ba', '#0e0fed', '#94f0f1', '#f2b1d8', '#ffdc6a'] },
       { key: 'concrete', name: 'Midnight Concrete',  swatches: ['#feda6a', '#d4d4dc', '#393f4d', '#1d1e22'] },
-      { key: 'darkroom', name: 'Darkroom',           swatches: ['#cd5554', '#91684a', '#00c07f', '#313d4b'] },
+      { key: 'darkroom',   name: 'Darkroom',           swatches: ['#cd5554', '#91684a', '#00c07f', '#313d4b'] },
+      { key: 'manuscript', name: 'Manuscript',         swatches: ['#edede9', '#d6ccc2', '#f5ebe0', '#e3d5ca', '#d5bdaf'] },
     ],
   },
 ];
@@ -591,23 +609,57 @@ function applyTheme(name) {
   root.style.setProperty('--accent-glow',  t.glow);
   root.style.setProperty('--accent-soft',  t.soft);
 
-  // Background environment — only in dark mode; light mode keeps its neutral palette
+  // Background environment
   if (state.settings.appearance === 'dark') {
     const e = t.env;
     root.style.setProperty('--bg',         e.bg);
     root.style.setProperty('--surface',    e.surface);
     root.style.setProperty('--surface-2',  e.surface2);
     root.style.setProperty('--surface-3',  e.surface3);
-    root.style.setProperty('--clock-face', e.bg);      // clock face = deepest bg tone
+    root.style.setProperty('--clock-face', e.bg);
     root.style.setProperty('--clock-rim',  e.surface);
     root.style.setProperty('--orb1-color', e.orb1);
     root.style.setProperty('--orb2-color', e.orb2);
+    // Reset text/border to dark defaults (in case a previous palette overrode them)
+    root.style.removeProperty('--text');
+    root.style.removeProperty('--text-muted');
+    root.style.removeProperty('--text-dim');
+    root.style.removeProperty('--border');
+    root.style.removeProperty('--border-bright');
   } else {
-    // Light mode: reset clock face to light values, leave bg alone (CSS handles it)
-    root.style.setProperty('--clock-face', '#ffffff');
-    root.style.setProperty('--clock-rim',  '#e8e6de');
+    // Light mode — use palette's own light world if it has one, else CSS defaults
+    const le = t.lightEnv;
+    if (le) {
+      root.style.setProperty('--bg',           le.bg);
+      root.style.setProperty('--surface',      le.surface);
+      root.style.setProperty('--surface-2',    le.surface2);
+      root.style.setProperty('--surface-3',    le.surface3);
+      root.style.setProperty('--clock-face',   le.clockFace);
+      root.style.setProperty('--clock-rim',    le.surface3);
+      root.style.setProperty('--orb1-color',   le.orb1);
+      root.style.setProperty('--orb2-color',   le.orb2);
+      root.style.setProperty('--text',         le.text);
+      root.style.setProperty('--text-muted',   le.textMuted);
+      root.style.setProperty('--text-dim',     le.textDim);
+      root.style.setProperty('--border',       le.border);
+      root.style.setProperty('--border-bright',le.borderBright);
+    } else {
+      // Restore neutral light defaults
+      root.style.removeProperty('--bg');
+      root.style.removeProperty('--surface');
+      root.style.removeProperty('--surface-2');
+      root.style.removeProperty('--surface-3');
+      root.style.removeProperty('--text');
+      root.style.removeProperty('--text-muted');
+      root.style.removeProperty('--text-dim');
+      root.style.removeProperty('--border');
+      root.style.removeProperty('--border-bright');
+      root.style.setProperty('--clock-face', '#ffffff');
+      root.style.setProperty('--clock-rim',  '#e8e6de');
+      root.style.setProperty('--orb1-color', t.start);
+      root.style.setProperty('--orb2-color', t.end);
+    }
   }
-  // --bg/surface in light mode are controlled by [data-appearance="light"] in CSS
 }
 
 function applyAppearance(mode) {

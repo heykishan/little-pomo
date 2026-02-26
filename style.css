@@ -1564,12 +1564,12 @@ kbd {
 /* ── Light mode: clock hand adjustments ───────────────── */
 
 [data-appearance="light"] .minute-hand .hand-body {
-  background: linear-gradient(to top, #1a1926, #3a3850);
-  box-shadow: 0 0 6px rgba(0,0,0,0.15);
+  background: linear-gradient(to top, var(--text), color-mix(in srgb, var(--text) 60%, transparent));
+  box-shadow: 0 0 6px rgba(0,0,0,0.12);
 }
 
 [data-appearance="light"] .minute-hand .hand-tail {
-  background: rgba(26,25,38,0.3);
+  background: color-mix(in srgb, var(--text) 30%, transparent);
 }
 
 [data-appearance="light"] .clock-face {
